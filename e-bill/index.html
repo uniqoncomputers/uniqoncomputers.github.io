@@ -7,9 +7,24 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- Vendor libraries: Mozilla PDF.js for genuine native vector PDF, html2pdf for instant offline fallback -->
+  <script src="./pdf.min.js"></script>
+  <script>
+    if (typeof pdfjsLib !== 'undefined') {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = './pdf.worker.min.js';
+    } else {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      s.onload = () => {
+        if (typeof pdfjsLib !== 'undefined') {
+          pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
+      };
+      document.head.appendChild(s);
+    }
+  </script>
   <script src="./html2pdf.bundle.min.js"></script>
   <script>
-    // Fallback if local html2pdf is missing
     if (typeof html2pdf === 'undefined') {
       const s = document.createElement('script');
       s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
@@ -221,31 +236,27 @@
     }
 
     .btn-download-hero {
-      width: 100%;
-      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       color: white;
       border: none;
-      border-radius: 14px;
-      padding: 15px 20px;
-      font-size: 15px;
+      border-radius: 16px;
+      padding: 16px 20px;
+      font-size: 16px;
       font-weight: 800;
+      letter-spacing: 0.3px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
+      box-shadow: 0 8px 20px -3px rgba(16, 185, 129, 0.4);
       cursor: pointer;
-      box-shadow: 0 6px 20px rgba(22, 163, 74, 0.35);
-      transition: all 0.2s;
+      transition: all 0.2s ease;
+      width: 100%;
     }
 
     .btn-download-hero:active {
       transform: scale(0.98);
-    }
-
-    .btn-download-hero:disabled {
-      background: #94a3b8;
-      box-shadow: none;
-      cursor: not-allowed;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
     }
 
     .btn-grid {
@@ -258,82 +269,138 @@
       background: white;
       color: var(--navy);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 11px;
-      font-size: 12.5px;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 13.5px;
       font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 8px;
       cursor: pointer;
       text-decoration: none;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      transition: all 0.2s;
+    }
+
+    .btn-sec:active {
+      background: #f8fafc;
+      transform: scale(0.98);
     }
 
     .btn-review {
-      background: white;
+      background: #ffffff;
       color: #ea4335;
       border: 1.5px solid #fecaca;
-      border-radius: 12px;
-      padding: 12px;
+      border-radius: 14px;
+      padding: 12px 14px;
       font-size: 13.5px;
       font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
+      cursor: pointer;
       text-decoration: none;
+      box-shadow: 0 2px 8px rgba(234, 67, 53, 0.08);
+      transition: all 0.2s;
     }
 
-    /* ==============================================================
-       OFFICIAL INVOICE SHEET (Pixel-Perfect UNIQON PDF Layout)
-       ============================================================== */
+    .btn-review:active {
+      background: #fef2f2;
+      transform: scale(0.98);
+    }
+
+    /* Native Status Badge */
+    .native-status-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+      border-radius: 12px;
+      padding: 9px 14px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* Native Vector PDF Container (Mozilla PDF.js) */
+    .native-pdf-container {
+      width: 100%;
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .native-pdf-page-card {
+      background: white;
+      border-radius: 12px;
+      padding: 8px;
+      box-shadow: 0 6px 24px rgba(15, 23, 42, 0.08);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+    }
+
+    .native-pdf-canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 6px;
+    }
+
+    /* Official Invoice Sheet (HTML fallback) */
     .invoice-wrapper {
       background: white;
       border-radius: 16px;
-      padding: 24px 20px;
-      border: 1px solid #cbd5e1;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-      width: 100%;
+      padding: 22px 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+      font-size: 12px;
+      position: relative;
     }
 
     .inv-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 16px;
-      padding-bottom: 16px;
       border-bottom: 2px solid #0f172a;
+      padding-bottom: 14px;
+      gap: 12px;
     }
 
     .inv-company-left {
       display: flex;
-      gap: 12px;
       align-items: flex-start;
+      gap: 12px;
       flex: 1;
     }
 
     .inv-logo-img {
-      width: 54px;
-      height: 54px;
+      width: 52px;
+      height: 52px;
       object-fit: contain;
       border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      padding: 2px;
+      flex-shrink: 0;
     }
 
     .inv-company-name {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 800;
       color: #0f172a;
-      line-height: 1.2;
       text-transform: uppercase;
+      letter-spacing: 0.3px;
     }
 
     .inv-company-details {
       font-size: 11px;
       color: #475569;
-      margin-top: 3px;
+      margin-top: 2px;
       line-height: 1.4;
     }
 
@@ -344,35 +411,27 @@
 
     .inv-type-title {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 18px;
-      font-weight: 900;
+      font-size: 16px;
+      font-weight: 800;
       color: #dc2626;
-      text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
     .inv-meta-table {
+      font-size: 11.5px;
       margin-top: 4px;
-      font-size: 11px;
       color: #334155;
       text-align: right;
-      line-height: 1.45;
     }
 
-    .inv-meta-table strong {
-      color: #0f172a;
-    }
-
-    /* Customer Info Box */
     .inv-customer-row {
-      margin-top: 14px;
-      padding: 10px 12px;
-      background: #f8fafc;
-      border-radius: 10px;
-      border: 1px solid #e2e8f0;
+      margin-top: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed #cbd5e1;
       display: flex;
       justify-content: space-between;
-      font-size: 12px;
+      font-size: 11.5px;
+      gap: 12px;
     }
 
     .inv-cust-label {
@@ -384,70 +443,64 @@
     }
 
     .inv-cust-name {
-      font-weight: 800;
       font-size: 13.5px;
+      font-weight: 800;
       color: #0f172a;
       margin-top: 2px;
     }
 
     .inv-cust-sub {
       color: #475569;
-      font-size: 11px;
+      font-size: 11.5px;
       margin-top: 1px;
     }
 
-    /* Official Table */
+    /* Items Table */
     .inv-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 16px;
+      margin-top: 12px;
       font-size: 12px;
     }
 
     .inv-table th {
-      background: #0f172a;
-      color: white;
-      font-size: 10.5px;
+      background: #f8fafc;
+      color: #334155;
+      padding: 7px 6px;
       font-weight: 800;
+      font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 9px 8px;
-      border: 1px solid #0f172a;
+      border-top: 1px solid #cbd5e1;
+      border-bottom: 1px solid #cbd5e1;
+      letter-spacing: 0.3px;
     }
 
     .inv-table td {
-      padding: 9px 8px;
-      border: 1px solid #e2e8f0;
+      padding: 7px 6px;
+      border-bottom: 1px solid #f1f5f9;
       color: #1e293b;
-      vertical-align: middle;
+      vertical-align: top;
     }
-
-    .inv-table tr:nth-child(even) {
-      background-color: #f8fafc;
-    }
-
-    .inv-table .text-center { text-align: center; }
-    .inv-table .text-right { text-align: right; }
 
     .inv-item-name {
       font-weight: 700;
       color: #0f172a;
     }
 
-    /* Financials & Words */
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+
+    /* Summary & Totals */
     .inv-summary-row {
-      margin-top: 14px;
+      margin-top: 12px;
       display: flex;
-      gap: 16px;
+      justify-content: space-between;
       align-items: flex-start;
+      gap: 16px;
     }
 
     .inv-words-box {
       flex: 1;
-      padding: 10px 12px;
-      background: #f8fafc;
-      border-radius: 10px;
-      border: 1px solid #e2e8f0;
       font-size: 11px;
       line-height: 1.45;
     }
@@ -566,7 +619,7 @@
         background: white;
         padding: 0;
       }
-      .brand-card, .promo-card, .action-card, .footer, .toast {
+      .brand-card, .promo-card, .action-card, .footer, .toast, .native-status-bar {
         display: none !important;
       }
       .container {
@@ -574,9 +627,17 @@
         padding: 0;
       }
       .invoice-wrapper {
-        border: none;
-        box-shadow: none;
-        padding: 0;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .native-pdf-page-card {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        page-break-after: always;
       }
     }
   </style>
@@ -584,17 +645,15 @@
 <body>
 
   <div class="container">
-    
-    <!-- 1. Brand Showcase Header with Official Logo -->
+
+    <!-- 1. Store Identity Header Card -->
     <div class="brand-card">
       <div class="brand-header">
         <img src="./logo.png" id="shopLogoImg" alt="Shop Logo" class="brand-logo-img">
         <div class="brand-info">
           <div class="brand-name" id="shopName">UNIQON COMPUTERS</div>
-          <div class="brand-meta" id="shopMeta">
-            <span id="shopAddress">No. 2, NKM Complex, Sekkalai Road, Karaikudi</span><br>
-            <span id="shopContact">📞 8667237053 • GSTIN: 33AABCU9603R1ZM</span>
-          </div>
+          <div class="brand-meta" id="shopAddress">No. 2, NKM Complex, Sekkalai Road, Karaikudi - 630001</div>
+          <div class="brand-meta" id="shopContact">📞 8667237053 • GSTIN: 33AABCU9603R1ZM</div>
         </div>
       </div>
       <div class="verified-pill">
@@ -625,7 +684,7 @@
     <div class="action-card">
       <button class="btn-download-hero" id="btnDownloadPdf" onclick="downloadInvoicePdf()">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Download Invoice (PDF)
+        Download Official Invoice (PDF)
       </button>
 
       <div class="btn-grid">
@@ -645,7 +704,21 @@
       </a>
     </div>
 
-    <!-- 4. The Official UNIQON Billing Pro Invoice Document -->
+    <!-- 4A. Native PDF Status Badge (shown when exact native PDF is loaded from GitHub) -->
+    <div class="native-status-bar" id="nativeStatusBar">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#059669"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        <span>Official Native Bill (100% Vector Original)</span>
+      </div>
+      <span style="font-size:10px;background:#10b981;color:white;padding:2px 8px;border-radius:12px;">Verified Genuine</span>
+    </div>
+
+    <!-- 4B. Native Vector PDF Viewer Container (Mozilla PDF.js renders genuine bill) -->
+    <div class="native-pdf-container" id="nativePdfContainer">
+      <!-- High-res native PDF canvases rendered here dynamically -->
+    </div>
+
+    <!-- 4C. The Official UNIQON Billing Pro Invoice Document (HTML Fallback) -->
     <div class="invoice-wrapper" id="officialInvoiceSheet">
       <!-- Invoice Header -->
       <div class="inv-header">
@@ -840,7 +913,7 @@
       },
       b: {
         t: 'Tax Invoice',
-        no: 'INV-2026-0099',
+        no: 'INV-001',
         d: '02-11-2026',
         cn: 'Karthik Raja',
         cm: '9876543210',
@@ -858,6 +931,7 @@
         dt: 1800,
         cg: 0,
         sg: 0,
+        ig: 0,
         gt: 26000
       },
       ad: {
@@ -889,6 +963,101 @@
     }
 
     let _globalBill = demoData.b;
+    let _nativePdfBlobUrl = null;
+    let _hasNativePdf = false;
+
+    // Checks and loads genuine native PDF from GitHub repository
+    async function loadNativePdfIfAvailable(invNo) {
+      if (!invNo) return;
+      const cleanNo = invNo.trim().replace(/[^a-zA-Z0-9_\-]/g, '_');
+      const filename = 'Invoice_' + cleanNo + '.pdf';
+      
+      // URLs to try:
+      // 1. Raw GitHub (Instant availability within 1s of push!)
+      // 2. Relative GitHub Pages path (../invoices/...)
+      // 3. Root path (./invoices/...)
+      const rawUrl = 'https://raw.githubusercontent.com/uniqoncomputers/uniqoncomputers.github.io/main/invoices/' + encodeURIComponent(filename);
+      const relativeUrl = '../invoices/' + encodeURIComponent(filename);
+      const rootUrl = './invoices/' + encodeURIComponent(filename);
+
+      let arrayBuffer = null;
+      let matchedUrl = null;
+
+      const urlsToTry = [rawUrl, relativeUrl, rootUrl];
+
+      for (const u of urlsToTry) {
+        try {
+          const res = await fetch(u, { cache: 'no-cache' });
+          if (res.ok) {
+            arrayBuffer = await res.arrayBuffer();
+            matchedUrl = u;
+            break;
+          }
+        } catch (_) {}
+      }
+
+      if (!arrayBuffer) {
+        console.log('Native PDF not yet available on GitHub, showing HTML invoice view.');
+        return;
+      }
+
+      console.log('✅ Native PDF found from:', matchedUrl, 'Size:', arrayBuffer.byteLength);
+
+      // Create downloadable Blob URL of the EXACT binary file
+      const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+      _nativePdfBlobUrl = URL.createObjectURL(blob);
+      _hasNativePdf = true;
+
+      // Update button text to reflect Genuine Native PDF
+      const btnDownload = document.getElementById('btnDownloadPdf');
+      if (btnDownload) {
+        btnDownload.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download Official Invoice (PDF)
+        `;
+      }
+
+      // If PDF.js is available, render native pages to canvas with 100% vector sharpness
+      if (window.pdfjsLib) {
+        try {
+          const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+          const pdfDoc = await loadingTask.promise;
+          const container = document.getElementById('nativePdfContainer');
+          const htmlSheet = document.getElementById('officialInvoiceSheet');
+          const statusBar = document.getElementById('nativeStatusBar');
+
+          container.innerHTML = '';
+
+          for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+            const page = await pdfDoc.getPage(pageNum);
+            const scale = 2.0; // 2x scale for sharp retina rendering
+            const viewport = page.getViewport({ scale });
+
+            const card = document.createElement('div');
+            card.className = 'native-pdf-page-card';
+
+            const canvas = document.createElement('canvas');
+            canvas.className = 'native-pdf-canvas';
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            card.appendChild(canvas);
+            container.appendChild(card);
+
+            await page.render({ canvasContext: context, viewport: viewport }).promise;
+          }
+
+          // Switch view from HTML to Native PDF
+          container.style.display = 'flex';
+          if (htmlSheet) htmlSheet.style.display = 'none';
+          if (statusBar) statusBar.style.display = 'flex';
+
+        } catch (err) {
+          console.error('PDF.js render error:', err);
+        }
+      }
+    }
 
     // Render data on page load
     function renderBill() {
@@ -1002,19 +1171,44 @@
         ? shop.gr.trim()
         : 'https://www.google.com/search?q=' + encodeURIComponent(shopName + ' ' + (shop.c || 'Karaikudi'));
       document.getElementById('btnGoogleReview').href = reviewUrl;
+
+      // 8. Attempt loading genuine Native PDF from GitHub
+      const urlParams = new URLSearchParams(window.location.search);
+      const invToFetch = urlParams.get('inv') || bill.no;
+      if (invToFetch) {
+        loadNativePdfIfAvailable(invToFetch);
+      }
     }
 
-    // Direct 1-Click PDF Download function (no print spooler!)
+    // Direct 1-Click PDF Download function (serves exact binary PDF if available)
     function downloadInvoicePdf() {
       const btn = document.getElementById('btnDownloadPdf');
       const originalText = btn.innerHTML;
       btn.innerHTML = '<span style="display:inline-block;animation:spin 1s linear infinite;">⏳</span> Downloading PDF...';
       btn.disabled = true;
 
-      const element = document.getElementById('officialInvoiceSheet');
       const billNo = (_globalBill && _globalBill.no) ? _globalBill.no : 'Invoice';
-      const filename = 'Invoice_' + billNo + '.pdf';
+      const cleanNo = billNo.trim().replace(/[^a-zA-Z0-9_\-]/g, '_');
+      const filename = 'Invoice_' + cleanNo + '.pdf';
 
+      if (_hasNativePdf && _nativePdfBlobUrl) {
+        // Direct download of the EXACT 100% genuine binary PDF file!
+        const a = document.createElement('a');
+        a.href = _nativePdfBlobUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showToast('✅ ' + filename + ' downloaded successfully!');
+        }, 400);
+        return;
+      }
+
+      // Fallback: convert HTML sheet to PDF
+      const element = document.getElementById('officialInvoiceSheet');
       const opt = {
         margin: [6, 6, 6, 6],
         filename: filename,
