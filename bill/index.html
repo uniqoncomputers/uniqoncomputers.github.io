@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Digital E-Invoice & Store Offers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #dc2626;
+      --primary-dark: #b91c1c;
+      --primary-light: #fee2e2;
+      --dark: #0f172a;
+      --card-bg: #ffffff;
+      --bg: #f8fafc;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --accent: #2563eb;
+      --wa-green: #25d366;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+      padding: 0 0 60px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 540px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Top Brand Bar */
+    .brand-card {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      color: white;
+      border-radius: 20px;
+      padding: 20px 18px;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-card::after {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(220, 38, 38, 0.35) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .brand-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 22px;
+      color: var(--primary);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
+
+    .brand-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .brand-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand-meta {
+      font-size: 11.5px;
+      color: #cbd5e1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 3px;
+    }
+
+    .verified-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 12px;
+    }
+
+    /* Max Showroom Promo Banner Card */
+    .promo-card {
+      background: linear-gradient(135deg, #ef4444 0%, #b91c1c 60%, #7f1d1d 100%);
+      color: white;
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: 0 10px 25px -5px rgba(220, 38, 38, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .promo-card::before {
+      content: 'OFFER';
+      position: absolute;
+      right: -10px;
+      bottom: -15px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 64px;
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+    }
+
+    .promo-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .promo-title {
+      font-size: 17px;
+      font-weight: 800;
+      margin-top: 8px;
+      line-height: 1.3;
+    }
+
+    .promo-desc {
+      font-size: 12px;
+      color: #fee2e2;
+      margin-top: 4px;
+    }
+
+    .coupon-box {
+      background: white;
+      color: var(--dark);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .coupon-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .coupon-label {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .coupon-code {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 1px;
+    }
+
+    .btn-copy {
+      background: var(--dark);
+      color: white;
+      border: none;
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-copy:active {
+      transform: scale(0.96);
+    }
+
+    /* Bill Summary Card */
+    .bill-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    }
+
+    .bill-head-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px dashed var(--border);
+      padding-bottom: 14px;
+    }
+
+    .bill-type {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .bill-number {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--dark);
+      margin-top: 2px;
+    }
+
+    .bill-date {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .paid-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--success-light);
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 800;
+    }
+
+    .customer-box {
+      margin-top: 12px;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border-radius: 12px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .customer-label {
+      color: var(--text-muted);
+    }
+
+    .customer-val {
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    /* Items Table */
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 12px;
+    }
+
+    .items-table th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 6px 4px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .items-table th.right,
+    .items-table td.right {
+      text-align: right;
+    }
+
+    .items-table td {
+      padding: 8px 4px;
+      border-bottom: 1px solid #f1f5f9;
+      color: var(--text);
+    }
+
+    .item-name {
+      font-weight: 700;
+      color: var(--dark);
+      display: block;
+    }
+
+    .item-sub {
+      font-size: 10.5px;
+      color: var(--text-muted);
+    }
+
+    /* Totals Summary */
+    .totals-box {
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 12px;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+    }
+
+    .total-row.grand {
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 1.5px solid var(--border);
+      font-size: 17px;
+      font-weight: 900;
+      color: var(--dark);
+    }
+
+    .grand-price {
+      color: var(--primary);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Action Buttons Card */
+    .action-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-main {
+      width: 100%;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 14.5px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.28);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-main:active {
+      transform: scale(0.98);
+    }
+
+    .btn-wa {
+      background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.28);
+    }
+
+    .btn-review {
+      background: white;
+      color: #ea4335;
+      border: 1.5px solid #fecaca;
+      box-shadow: none;
+      font-size: 13.5px;
+    }
+
+    .btn-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn-sec {
+      background: white;
+      color: var(--dark);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--dark);
+      color: white;
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-size: 12.5px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Printable style when customer taps Download/Print */
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .promo-card, .action-card, .verified-pill, .coupon-box, .btn-copy, .btn-main, .btn-sec, .toast {
+        display: none !important;
+      }
+      .brand-card {
+        background: none;
+        color: black;
+        box-shadow: none;
+        border-bottom: 2px solid black;
+        border-radius: 0;
+        padding: 0 0 10px 0;
+      }
+      .brand-name {
+        color: black;
+      }
+      .brand-meta {
+        color: #333;
+      }
+      .bill-card {
+        border: none;
+        box-shadow: none;
+        padding: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- 1. Brand Showcase Header -->
+    <div class="brand-card">
+      <div class="brand-header">
+        <div class="brand-logo-badge" id="shopLogoBadge">U</div>
+        <div class="brand-info">
+          <div class="brand-name" id="shopName">UNIQON COMPUTERS</div>
+          <div class="brand-meta" id="shopMeta">
+            <span id="shopCity">Karaikudi</span> • 
+            <span id="shopPhone">📞 8667237053</span>
+          </div>
+        </div>
+      </div>
+      <div class="verified-pill">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        Verified Official Digital E-Invoice
+      </div>
+    </div>
+
+    <!-- 2. Showroom Promotional Ad Banner (Max Style) -->
+    <div class="promo-card" id="promoCard">
+      <div class="promo-tag">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Exclusive Store Offer
+      </div>
+      <div class="promo-title" id="promoTitle">Mega Festive Exchange & Upgrade Offer!</div>
+      <div class="promo-desc" id="promoDesc">Get up to ₹10,000 OFF on Laptops & Custom PC Builds. 1-Year Warranty Guaranteed.</div>
+      
+      <div class="coupon-box">
+        <div class="coupon-info">
+          <span class="coupon-label">Next Visit Discount Code</span>
+          <span class="coupon-code" id="couponCode">WELCOME500</span>
+        </div>
+        <button class="btn-copy" onclick="copyCoupon()">Copy Code</button>
+      </div>
+    </div>
+
+    <!-- 3. Invoice Breakdown & Items Table -->
+    <div class="bill-card">
+      <div class="bill-head-row">
+        <div>
+          <div class="bill-type" id="invoiceType">Tax Invoice</div>
+          <div class="bill-number" id="invoiceNumber">INV-2026-0042</div>
+          <div class="bill-date" id="invoiceDate">Date: 01-11-2026</div>
+        </div>
+        <div class="paid-badge" id="paidBadge">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+          PAID
+        </div>
+      </div>
+
+      <div class="customer-box">
+        <span class="customer-label">Billed To:</span>
+        <span class="customer-val" id="customerName">Walk-in Customer</span>
+      </div>
+
+      <!-- Items List -->
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th style="width: 24px;">#</th>
+            <th>Item Description</th>
+            <th class="right" style="width: 40px;">Qty</th>
+            <th class="right" style="width: 65px;">Price</th>
+            <th class="right" style="width: 75px;">Amount</th>
+          </tr>
+        </thead>
+        <tbody id="itemsBody">
+          <!-- Populated dynamically -->
+        </tbody>
+      </table>
+
+      <!-- Totals -->
+      <div class="totals-box">
+        <div class="total-row">
+          <span>Subtotal</span>
+          <span id="subTotal">₹ 0.00</span>
+        </div>
+        <div class="total-row" id="discountRow" style="display: none;">
+          <span style="color: var(--success);">Special Discount</span>
+          <span id="discountTotal" style="color: var(--success);">-₹ 0.00</span>
+        </div>
+        <div class="total-row" id="taxRow">
+          <span>GST Tax</span>
+          <span id="gstTotal">₹ 0.00</span>
+        </div>
+        <div class="total-row grand">
+          <span>Grand Total</span>
+          <span class="grand-price" id="grandTotal">₹ 0.00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Action Center (Download, Review, WhatsApp, Call) -->
+    <div class="action-card">
+      <!-- Download / Print Invoice -->
+      <button class="btn-main" onclick="window.print()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download / Print Invoice (PDF)
+      </button>
+
+      <!-- Google 5-Star Review Button -->
+      <a class="btn-main btn-review" id="btnGoogleReview" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#ea4335"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Rate 5 Stars on Google Reviews
+      </a>
+
+      <!-- Quick Action Grid -->
+      <div class="btn-grid">
+        <a class="btn-sec" id="btnWhatsApp" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--wa-green)"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+          WhatsApp Us
+        </a>
+        <a class="btn-sec" id="btnCall">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          Call Store
+        </a>
+      </div>
+    </div>
+
+    <!-- 5. Footer -->
+    <div class="footer">
+      <span>Thank you for shopping with us! • Choose UNIQON Choose Quality.</span>
+      <span>Powered by UNIQON Billing Pro Enterprise</span>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast">Copied to clipboard!</div>
+
+  <script>
+    // Utility for currency formatting in INR
+    function formatInr(num) {
+      const val = Math.round(Number(num) || 0);
+      return val.toLocaleString('en-IN');
+    }
+
+    // Copy coupon code
+    function copyCoupon() {
+      const code = document.getElementById('couponCode').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('Coupon Code "' + code + '" Copied!');
+      });
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.innerText = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    // Default Fallback Demo Data (UNIQON COMPUTERS)
+    const demoData = {
+      s: {
+        n: 'UNIQON COMPUTERS',
+        c: 'Karaikudi, Tamil Nadu',
+        p: '8667237053',
+        a: 'No. 2, NKM Complex, Sekkalai Road, Karaikudi',
+        g: '33AABCU9603R1ZM',
+        gr: 'https://maps.app.goo.gl/KaraikudiUNIQON'
+      },
+      b: {
+        t: 'Tax Invoice',
+        no: 'INV-2026-0042',
+        d: '01-11-2026',
+        cn: 'Walk-in Customer',
+        pm: 'UPI / GPay',
+        ps: 'PAID'
+      },
+      i: [
+        ['Intel Core i5 12400 Processor 12th Gen', 1, 12500, 12500],
+        ['MSI PRO H610M-E Motherboard DDR4', 1, 6200, 6200],
+        ['Crucial 16GB DDR4 3200MHz Desktop RAM', 1, 2800, 2800],
+        ['WD Green 500GB NVMe M.2 SSD', 1, 3500, 3500],
+        ['Ant Esports 500W Gaming Power Supply', 1, 2200, 2200]
+      ],
+      m: {
+        st: 27200,
+        dt: 1200,
+        cg: 0,
+        sg: 0,
+        gt: 26000
+      },
+      ad: {
+        t: 'Mega Festive Exchange & Upgrade Offer!',
+        d: 'Get up to ₹10,000 OFF on Laptops & Custom PC Builds. 1-Year Official Warranty.',
+        cc: 'WELCOME500',
+        cd: 'Flat ₹500 OFF on next purchase above ₹5,000'
+      }
+    };
+
+    // Parse URL payload from search params (?d=...) or hash (#d=...)
+    function parsePayload() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        let b64 = urlParams.get('d');
+        if (!b64 && window.location.hash && window.location.hash.includes('d=')) {
+          b64 = window.location.hash.split('d=')[1];
+        }
+        if (!b64) {
+          return demoData;
+        }
+        // Standard URL-safe Base64 decode
+        const normalized = b64.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonStr = decodeURIComponent(escape(atob(normalized)));
+        return JSON.parse(jsonStr);
+      } catch (e) {
+        console.warn('Error parsing bill payload, loading demo:', e);
+        return demoData;
+      }
+    }
+
+    // Render data on page load
+    function renderBill() {
+      const data = parsePayload();
+      const shop = data.s || {};
+      const bill = data.b || {};
+      const items = data.i || [];
+      const money = data.m || {};
+      const ad = data.ad || {};
+
+      // 1. Shop Details
+      const shopName = shop.n || 'UNIQON COMPUTERS';
+      document.getElementById('shopName').innerText = shopName;
+      document.getElementById('shopLogoBadge').innerText = shopName.charAt(0);
+      document.getElementById('shopCity').innerText = shop.c || shop.a || 'Karaikudi';
+      document.getElementById('shopPhone').innerText = '📞 ' + (shop.p || '8667237053');
+
+      // 2. Promo Banner
+      if (ad.t) {
+        document.getElementById('promoTitle').innerText = ad.t;
+      }
+      if (ad.d) {
+        document.getElementById('promoDesc').innerText = ad.d;
+      }
+      if (ad.cc) {
+        document.getElementById('couponCode').innerText = ad.cc;
+      } else {
+        document.getElementById('couponCode').innerText = 'UNIQON500';
+      }
+
+      // 3. Bill Meta
+      document.getElementById('invoiceType').innerText = bill.t || 'Tax Invoice';
+      document.getElementById('invoiceNumber').innerText = bill.no || 'INV-001';
+      document.getElementById('invoiceDate').innerText = 'Date: ' + (bill.d || new Date().toISOString().substring(0, 10));
+      document.getElementById('customerName').innerText = bill.cn || 'Walk-in Customer';
+
+      // 4. Items Table
+      const itemsBody = document.getElementById('itemsBody');
+      itemsBody.innerHTML = '';
+      items.forEach((item, index) => {
+        const name = item[0] || 'Item';
+        const qty = item[1] || 1;
+        const price = item[2] || 0;
+        const total = item[3] || (qty * price);
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="color: #94a3b8; font-weight: 700;">${index + 1}</td>
+          <td>
+            <span class="item-name">${name}</span>
+          </td>
+          <td class="right">${qty}</td>
+          <td class="right">₹${formatInr(price)}</td>
+          <td class="right" style="font-weight: 800;">₹${formatInr(total)}</td>
+        `;
+        itemsBody.appendChild(tr);
+      });
+
+      // 5. Money Totals
+      const grandTotal = money.gt || 0;
+      const subTotal = money.st || grandTotal;
+      const discount = money.dt || 0;
+      const tax = (money.cg || 0) + (money.sg || 0) + (money.ig || 0);
+
+      document.getElementById('subTotal').innerText = '₹ ' + formatInr(subTotal);
+      document.getElementById('grandTotal').innerText = '₹ ' + formatInr(grandTotal);
+
+      if (discount > 0) {
+        document.getElementById('discountRow').style.display = 'flex';
+        document.getElementById('discountTotal').innerText = '-₹ ' + formatInr(discount);
+      } else {
+        document.getElementById('discountRow').style.display = 'none';
+      }
+
+      if (tax > 0) {
+        document.getElementById('taxRow').style.display = 'flex';
+        document.getElementById('gstTotal').innerText = '₹ ' + formatInr(tax);
+      } else {
+        document.getElementById('taxRow').style.display = 'none';
+      }
+
+      // 6. Action Buttons
+      const cleanPhone = (shop.p || '8667237053').replace(/[^0-9]/g, '');
+      const waPhone = cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone;
+      
+      const waMsg = encodeURIComponent(
+        'Hi ' + shopName + ', I am inquiring about my Invoice (' + (bill.no || '') + ') and the Store Offer (' + (ad.cc || 'WELCOME500') + ')!'
+      );
+      document.getElementById('btnWhatsApp').href = 'https://wa.me/' + waPhone + '?text=' + waMsg;
+      document.getElementById('btnCall').href = 'tel:' + cleanPhone;
+
+      const reviewUrl = shop.gr && shop.gr.trim().length > 0 
+        ? shop.gr.trim() 
+        : 'https://www.google.com/search?q=' + encodeURIComponent(shopName + ' ' + (shop.c || ''));
+      document.getElementById('btnGoogleReview').href = reviewUrl;
+    }
+
+    window.addEventListener('DOMContentLoaded', renderBill);
+    window.addEventListener('hashchange', renderBill);
+  </script>
+</body>
+</html>
