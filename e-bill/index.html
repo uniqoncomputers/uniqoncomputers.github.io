@@ -3,24 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Digital E-Invoice & Store Offers</title>
+  <title>Digital E-Invoice & Store Offers - UNIQON Billing Pro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="./html2pdf.bundle.min.js"></script>
+  <script>
+    // Fallback if local html2pdf is missing
+    if (typeof html2pdf === 'undefined') {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+      document.head.appendChild(s);
+    }
+  </script>
   <style>
     :root {
       --primary: #dc2626;
       --primary-dark: #b91c1c;
-      --primary-light: #fee2e2;
-      --dark: #0f172a;
+      --navy: #0f172a;
+      --navy-light: #1e293b;
       --card-bg: #ffffff;
-      --bg: #f8fafc;
+      --bg: #f1f5f9;
       --border: #e2e8f0;
       --text: #1e293b;
       --text-muted: #64748b;
-      --success: #10b981;
-      --success-light: #d1fae5;
-      --accent: #2563eb;
+      --success: #16a34a;
       --wa-green: #25d366;
     }
 
@@ -45,53 +52,38 @@
 
     .container {
       width: 100%;
-      max-width: 540px;
+      max-width: 680px;
       padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
     }
 
     /* Top Brand Bar */
     .brand-card {
-      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #0f172a 100%);
       color: white;
       border-radius: 20px;
-      padding: 20px 18px;
+      padding: 18px;
       box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25);
       position: relative;
       overflow: hidden;
     }
 
-    .brand-card::after {
-      content: '';
-      position: absolute;
-      top: -40px;
-      right: -40px;
-      width: 120px;
-      height: 120px;
-      background: radial-gradient(circle, rgba(220, 38, 38, 0.35) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
     .brand-header {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
 
-    .brand-logo-badge {
-      width: 48px;
-      height: 48px;
+    .brand-logo-img {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
       border-radius: 14px;
       background: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 22px;
-      color: var(--primary);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 4px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.2);
       flex-shrink: 0;
     }
 
@@ -102,22 +94,21 @@
 
     .brand-name {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 18px;
-      font-weight: 700;
+      font-size: 19px;
+      font-weight: 800;
       letter-spacing: 0.3px;
       text-transform: uppercase;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      color: #ffffff;
     }
 
     .brand-meta {
-      font-size: 11.5px;
+      font-size: 12px;
       color: #cbd5e1;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
       margin-top: 3px;
+      line-height: 1.4;
     }
 
     .verified-pill {
@@ -127,11 +118,11 @@
       background: rgba(16, 185, 129, 0.2);
       color: #34d399;
       border: 1px solid rgba(52, 211, 153, 0.4);
-      padding: 3px 9px;
+      padding: 3px 10px;
       border-radius: 20px;
       font-size: 11px;
       font-weight: 700;
-      margin-top: 12px;
+      margin-top: 10px;
     }
 
     /* Max Showroom Promo Banner Card */
@@ -145,23 +136,11 @@
       overflow: hidden;
     }
 
-    .promo-card::before {
-      content: 'OFFER';
-      position: absolute;
-      right: -10px;
-      bottom: -15px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 64px;
-      font-weight: 900;
-      color: rgba(255, 255, 255, 0.08);
-      pointer-events: none;
-    }
-
     .promo-tag {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      background: rgba(255, 255, 255, 0.2);
+      gap: 5px;
+      background: rgba(255, 255, 255, 0.22);
       backdrop-filter: blur(8px);
       padding: 3px 10px;
       border-radius: 20px;
@@ -186,14 +165,15 @@
 
     .coupon-box {
       background: white;
-      color: var(--dark);
+      color: var(--navy);
       border-radius: 12px;
-      padding: 10px 12px;
-      margin-top: 14px;
+      padding: 10px 14px;
+      margin-top: 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     .coupon-info {
@@ -202,8 +182,8 @@
     }
 
     .coupon-label {
-      font-size: 9.5px;
-      font-weight: 700;
+      font-size: 9px;
+      font-weight: 800;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -211,19 +191,19 @@
 
     .coupon-code {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 16px;
-      font-weight: 700;
+      font-size: 17px;
+      font-weight: 800;
       color: var(--primary);
       letter-spacing: 1px;
     }
 
     .btn-copy {
-      background: var(--dark);
+      background: var(--navy);
       color: white;
       border: none;
-      padding: 7px 12px;
+      padding: 8px 14px;
       border-radius: 8px;
-      font-size: 11.5px;
+      font-size: 12px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
@@ -233,189 +213,39 @@
       transform: scale(0.96);
     }
 
-    /* Bill Summary Card */
-    .bill-card {
-      background: var(--card-bg);
-      border-radius: 20px;
-      padding: 18px;
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-    }
-
-    .bill-head-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      border-bottom: 1px dashed var(--border);
-      padding-bottom: 14px;
-    }
-
-    .bill-type {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .bill-number {
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--dark);
-      margin-top: 2px;
-    }
-
-    .bill-date {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .paid-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: var(--success-light);
-      color: #065f46;
-      border: 1px solid #a7f3d0;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 11.5px;
-      font-weight: 800;
-    }
-
-    .customer-box {
-      margin-top: 12px;
-      padding: 10px 12px;
-      background: #f8fafc;
-      border-radius: 12px;
-      font-size: 12px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .customer-label {
-      color: var(--text-muted);
-    }
-
-    .customer-val {
-      font-weight: 700;
-      color: var(--dark);
-    }
-
-    /* Items Table */
-    .items-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 14px;
-      font-size: 12px;
-    }
-
-    .items-table th {
-      text-align: left;
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 6px 4px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .items-table th.right,
-    .items-table td.right {
-      text-align: right;
-    }
-
-    .items-table td {
-      padding: 8px 4px;
-      border-bottom: 1px solid #f1f5f9;
-      color: var(--text);
-    }
-
-    .item-name {
-      font-weight: 700;
-      color: var(--dark);
-      display: block;
-    }
-
-    .item-sub {
-      font-size: 10.5px;
-      color: var(--text-muted);
-    }
-
-    /* Totals Summary */
-    .totals-box {
-      margin-top: 14px;
-      padding-top: 10px;
-      border-top: 1px dashed var(--border);
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      font-size: 12px;
-    }
-
-    .total-row {
-      display: flex;
-      justify-content: space-between;
-      color: var(--text-muted);
-    }
-
-    .total-row.grand {
-      margin-top: 6px;
-      padding-top: 8px;
-      border-top: 1.5px solid var(--border);
-      font-size: 17px;
-      font-weight: 900;
-      color: var(--dark);
-    }
-
-    .grand-price {
-      color: var(--primary);
-      font-family: 'Space Grotesk', sans-serif;
-    }
-
-    /* Action Buttons Card */
+    /* Action Buttons (Hero Download Bar) */
     .action-card {
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .btn-main {
+    .btn-download-hero {
       width: 100%;
-      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
       color: white;
       border: none;
       border-radius: 14px;
-      padding: 14px 18px;
-      font-size: 14.5px;
+      padding: 15px 20px;
+      font-size: 15px;
       font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.28);
-      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(22, 163, 74, 0.35);
       transition: all 0.2s;
     }
 
-    .btn-main:active {
+    .btn-download-hero:active {
       transform: scale(0.98);
     }
 
-    .btn-wa {
-      background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
-      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.28);
-    }
-
-    .btn-review {
-      background: white;
-      color: #ea4335;
-      border: 1.5px solid #fecaca;
+    .btn-download-hero:disabled {
+      background: #94a3b8;
       box-shadow: none;
-      font-size: 13.5px;
+      cursor: not-allowed;
     }
 
     .btn-grid {
@@ -426,11 +256,11 @@
 
     .btn-sec {
       background: white;
-      color: var(--dark);
+      color: var(--navy);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 10px;
-      font-size: 12px;
+      padding: 11px;
+      font-size: 12.5px;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -438,69 +268,315 @@
       gap: 6px;
       cursor: pointer;
       text-decoration: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
     }
 
-    /* Footer */
+    .btn-review {
+      background: white;
+      color: #ea4335;
+      border: 1.5px solid #fecaca;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 13.5px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    /* ==============================================================
+       OFFICIAL INVOICE SHEET (Pixel-Perfect UNIQON PDF Layout)
+       ============================================================== */
+    .invoice-wrapper {
+      background: white;
+      border-radius: 16px;
+      padding: 24px 20px;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+      width: 100%;
+    }
+
+    .inv-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #0f172a;
+    }
+
+    .inv-company-left {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      flex: 1;
+    }
+
+    .inv-logo-img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .inv-company-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .inv-company-details {
+      font-size: 11px;
+      color: #475569;
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+
+    .inv-type-box {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .inv-type-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      color: #dc2626;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .inv-meta-table {
+      margin-top: 4px;
+      font-size: 11px;
+      color: #334155;
+      text-align: right;
+      line-height: 1.45;
+    }
+
+    .inv-meta-table strong {
+      color: #0f172a;
+    }
+
+    /* Customer Info Box */
+    .inv-customer-row {
+      margin-top: 14px;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+
+    .inv-cust-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .inv-cust-name {
+      font-weight: 800;
+      font-size: 13.5px;
+      color: #0f172a;
+      margin-top: 2px;
+    }
+
+    .inv-cust-sub {
+      color: #475569;
+      font-size: 11px;
+      margin-top: 1px;
+    }
+
+    /* Official Table */
+    .inv-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      font-size: 12px;
+    }
+
+    .inv-table th {
+      background: #0f172a;
+      color: white;
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 9px 8px;
+      border: 1px solid #0f172a;
+    }
+
+    .inv-table td {
+      padding: 9px 8px;
+      border: 1px solid #e2e8f0;
+      color: #1e293b;
+      vertical-align: middle;
+    }
+
+    .inv-table tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    .inv-table .text-center { text-align: center; }
+    .inv-table .text-right { text-align: right; }
+
+    .inv-item-name {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    /* Financials & Words */
+    .inv-summary-row {
+      margin-top: 14px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .inv-words-box {
+      flex: 1;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .inv-words-label {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #64748b;
+      text-transform: uppercase;
+    }
+
+    .inv-words-val {
+      font-weight: 800;
+      color: #0f172a;
+      margin-top: 2px;
+      font-style: italic;
+    }
+
+    .inv-totals-table {
+      width: 240px;
+      font-size: 12px;
+      border-collapse: collapse;
+    }
+
+    .inv-totals-table td {
+      padding: 4px 6px;
+      color: #475569;
+    }
+
+    .inv-totals-table td.val {
+      text-align: right;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .inv-totals-table tr.grand-row td {
+      padding-top: 8px;
+      border-top: 2px solid #0f172a;
+      font-size: 15px;
+      font-weight: 900;
+      color: #dc2626;
+    }
+
+    /* Bank, Signatory & Terms Footer */
+    .inv-footer-grid {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px dashed #cbd5e1;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      font-size: 11px;
+    }
+
+    .inv-bank-terms {
+      flex: 1;
+      color: #475569;
+      line-height: 1.45;
+    }
+
+    .inv-bank-title {
+      font-weight: 800;
+      color: #0f172a;
+      text-transform: uppercase;
+      font-size: 10px;
+      margin-bottom: 2px;
+    }
+
+    .inv-signatory-box {
+      text-align: center;
+      width: 170px;
+      padding-top: 36px;
+      border-top: 1px solid #94a3b8;
+      font-size: 11px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    /* Footer Credits */
     .footer {
       text-align: center;
-      font-size: 11px;
+      font-size: 11.5px;
       color: var(--text-muted);
-      margin-top: 10px;
+      margin-top: 12px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
 
     .toast {
       position: fixed;
       bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: var(--dark);
+      background: #0f172a;
       color: white;
-      padding: 10px 18px;
+      padding: 12px 22px;
       border-radius: 30px;
-      font-size: 12.5px;
+      font-size: 13px;
       font-weight: 700;
       box-shadow: 0 10px 25px rgba(0,0,0,0.3);
       opacity: 0;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      z-index: 999;
       pointer-events: none;
+      transform: translateY(15px);
+      transition: all 0.3s ease;
+      z-index: 9999;
     }
 
     .toast.show {
-      transform: translateX(-50%) translateY(0);
       opacity: 1;
+      transform: translateY(0);
     }
 
-    /* Printable style when customer taps Download/Print */
+    /* Print styles */
     @media print {
       body {
         background: white;
         padding: 0;
       }
-      .promo-card, .action-card, .verified-pill, .coupon-box, .btn-copy, .btn-main, .btn-sec, .toast {
+      .brand-card, .promo-card, .action-card, .footer, .toast {
         display: none !important;
       }
-      .brand-card {
-        background: none;
-        color: black;
-        box-shadow: none;
-        border-bottom: 2px solid black;
-        border-radius: 0;
-        padding: 0 0 10px 0;
+      .container {
+        max-width: 100%;
+        padding: 0;
       }
-      .brand-name {
-        color: black;
-      }
-      .brand-meta {
-        color: #333;
-      }
-      .bill-card {
+      .invoice-wrapper {
         border: none;
         box-shadow: none;
-        padding: 10px 0;
+        padding: 0;
       }
     }
   </style>
@@ -509,15 +585,15 @@
 
   <div class="container">
     
-    <!-- 1. Brand Showcase Header -->
+    <!-- 1. Brand Showcase Header with Official Logo -->
     <div class="brand-card">
       <div class="brand-header">
-        <div class="brand-logo-badge" id="shopLogoBadge">U</div>
+        <img src="./logo.png" id="shopLogoImg" alt="Shop Logo" class="brand-logo-img">
         <div class="brand-info">
           <div class="brand-name" id="shopName">UNIQON COMPUTERS</div>
           <div class="brand-meta" id="shopMeta">
-            <span id="shopCity">Karaikudi</span> • 
-            <span id="shopPhone">📞 8667237053</span>
+            <span id="shopAddress">No. 2, NKM Complex, Sekkalai Road, Karaikudi</span><br>
+            <span id="shopContact">📞 8667237053 • GSTIN: 33AABCU9603R1ZM</span>
           </div>
         </div>
       </div>
@@ -527,111 +603,151 @@
       </div>
     </div>
 
-    <!-- 2. Showroom Promotional Ad Banner (Max Style) -->
+    <!-- 2. Showroom Promotional Offer (Max Style) -->
     <div class="promo-card" id="promoCard">
       <div class="promo-tag">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
         Exclusive Store Offer
       </div>
-      <div class="promo-title" id="promoTitle">Mega Festive Exchange & Upgrade Offer!</div>
-      <div class="promo-desc" id="promoDesc">Get up to ₹10,000 OFF on Laptops & Custom PC Builds. 1-Year Warranty Guaranteed.</div>
+      <div class="promo-title" id="promoTitle">Festive Offers & Upgrades Available!</div>
+      <div class="promo-desc" id="promoDesc">Exchange old laptops, PC upgrades & CCTV security packages.</div>
       
       <div class="coupon-box">
         <div class="coupon-info">
-          <span class="coupon-label">Next Visit Discount Code</span>
+          <span class="coupon-label">Next Visit Discount Coupon</span>
           <span class="coupon-code" id="couponCode">WELCOME500</span>
         </div>
         <button class="btn-copy" onclick="copyCoupon()">Copy Code</button>
       </div>
     </div>
 
-    <!-- 3. Invoice Breakdown & Items Table -->
-    <div class="bill-card">
-      <div class="bill-head-row">
-        <div>
-          <div class="bill-type" id="invoiceType">Tax Invoice</div>
-          <div class="bill-number" id="invoiceNumber">INV-2026-0042</div>
-          <div class="bill-date" id="invoiceDate">Date: 01-11-2026</div>
-        </div>
-        <div class="paid-badge" id="paidBadge">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-          PAID
-        </div>
-      </div>
-
-      <div class="customer-box">
-        <span class="customer-label">Billed To:</span>
-        <span class="customer-val" id="customerName">Walk-in Customer</span>
-      </div>
-
-      <!-- Items List -->
-      <table class="items-table">
-        <thead>
-          <tr>
-            <th style="width: 24px;">#</th>
-            <th>Item Description</th>
-            <th class="right" style="width: 40px;">Qty</th>
-            <th class="right" style="width: 65px;">Price</th>
-            <th class="right" style="width: 75px;">Amount</th>
-          </tr>
-        </thead>
-        <tbody id="itemsBody">
-          <!-- Populated dynamically -->
-        </tbody>
-      </table>
-
-      <!-- Totals -->
-      <div class="totals-box">
-        <div class="total-row">
-          <span>Subtotal</span>
-          <span id="subTotal">₹ 0.00</span>
-        </div>
-        <div class="total-row" id="discountRow" style="display: none;">
-          <span style="color: var(--success);">Special Discount</span>
-          <span id="discountTotal" style="color: var(--success);">-₹ 0.00</span>
-        </div>
-        <div class="total-row" id="taxRow">
-          <span>GST Tax</span>
-          <span id="gstTotal">₹ 0.00</span>
-        </div>
-        <div class="total-row grand">
-          <span>Grand Total</span>
-          <span class="grand-price" id="grandTotal">₹ 0.00</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- 4. Action Center (Download, Review, WhatsApp, Call) -->
+    <!-- 3. Action Buttons (Direct 1-Click PDF Download) -->
     <div class="action-card">
-      <!-- Download / Print Invoice -->
-      <button class="btn-main" onclick="window.print()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Download / Print Invoice (PDF)
+      <button class="btn-download-hero" id="btnDownloadPdf" onclick="downloadInvoicePdf()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Invoice (PDF)
       </button>
 
-      <!-- Google 5-Star Review Button -->
-      <a class="btn-main btn-review" id="btnGoogleReview" target="_blank" rel="noopener">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="#ea4335"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        Rate 5 Stars on Google Reviews
-      </a>
-
-      <!-- Quick Action Grid -->
       <div class="btn-grid">
+        <button class="btn-sec" onclick="window.print()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print Invoice
+        </button>
         <a class="btn-sec" id="btnWhatsApp" target="_blank" rel="noopener">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--wa-green)"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
           WhatsApp Us
         </a>
-        <a class="btn-sec" id="btnCall">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-          Call Store
-        </a>
+      </div>
+
+      <a class="btn-review" id="btnGoogleReview" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#ea4335"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Rate 5 Stars on Google Reviews
+      </a>
+    </div>
+
+    <!-- 4. The Official UNIQON Billing Pro Invoice Document -->
+    <div class="invoice-wrapper" id="officialInvoiceSheet">
+      <!-- Invoice Header -->
+      <div class="inv-header">
+        <div class="inv-company-left">
+          <img src="./logo.png" id="invLogoImg" alt="Logo" class="inv-logo-img">
+          <div>
+            <div class="inv-company-name" id="docShopName">UNIQON COMPUTERS</div>
+            <div class="inv-company-details" id="docShopDetails">
+              No. 2, NKM Complex (First Floor), Sekkalai Road,<br>
+              Karaikudi - 630001, Tamil Nadu.<br>
+              Phone: 8667237053 | GSTIN: 33AABCU9603R1ZM
+            </div>
+          </div>
+        </div>
+        <div class="inv-type-box">
+          <div class="inv-type-title" id="docInvoiceType">TAX INVOICE</div>
+          <div class="inv-meta-table">
+            <div>Invoice No: <strong id="docInvoiceNumber">INV-001</strong></div>
+            <div>Date: <strong id="docInvoiceDate">02-11-2026</strong></div>
+            <div>Mode: <strong id="docPaymentMode">CASH</strong></div>
+            <div>POS: <strong>Tamil Nadu (33)</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer / Bill To Row -->
+      <div class="inv-customer-row">
+        <div>
+          <div class="inv-cust-label">Billed To (Customer Details):</div>
+          <div class="inv-cust-name" id="docCustomerName">Walk-in Customer</div>
+          <div class="inv-cust-sub" id="docCustomerPhone">Phone: -</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="inv-cust-label">Payment Status:</div>
+          <div id="docPaymentStatus" style="font-weight: 800; color: #16a34a; font-size: 13px; margin-top: 2px;">PAID</div>
+        </div>
+      </div>
+
+      <!-- Itemized Table -->
+      <table class="inv-table">
+        <thead>
+          <tr>
+            <th style="width: 32px;" class="text-center">#</th>
+            <th>Item / Product Description</th>
+            <th style="width: 50px;" class="text-center">Qty</th>
+            <th style="width: 85px;" class="text-right">Rate (₹)</th>
+            <th style="width: 95px;" class="text-right">Amount (₹)</th>
+          </tr>
+        </thead>
+        <tbody id="docItemsBody">
+          <!-- Rendered dynamically -->
+        </tbody>
+      </table>
+
+      <!-- Summary & Words -->
+      <div class="inv-summary-row">
+        <div class="inv-words-box">
+          <div class="inv-words-label">Amount in Words:</div>
+          <div class="inv-words-val" id="docAmountInWords">Rupees Twenty Six Thousand Only</div>
+          <div style="margin-top: 8px; font-size: 10px; color: #64748b;" id="docBankDetails">
+            <strong>Bank Details:</strong> Bank: State Bank of India | A/C: 1234567890 | IFSC: SBIN0001234
+          </div>
+        </div>
+        <table class="inv-totals-table">
+          <tr>
+            <td>Subtotal</td>
+            <td class="val" id="docSubTotal">₹ 26,000.00</td>
+          </tr>
+          <tr id="docDiscountRow" style="display: none;">
+            <td style="color: #16a34a;">Discount</td>
+            <td class="val" id="docDiscountTotal" style="color: #16a34a;">-₹ 0.00</td>
+          </tr>
+          <tr id="docTaxRow" style="display: none;">
+            <td>GST Tax</td>
+            <td class="val" id="docTaxTotal">₹ 0.00</td>
+          </tr>
+          <tr class="grand-row">
+            <td>Grand Total</td>
+            <td class="val" id="docGrandTotal">₹ 26,000.00</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Terms & Signatory Footer -->
+      <div class="inv-footer-grid">
+        <div class="inv-bank-terms">
+          <div class="inv-bank-title">Terms & Conditions:</div>
+          <div>1. Goods once sold will not be taken back or exchanged.</div>
+          <div>2. Warranty claims are subject to manufacturer terms.</div>
+          <div>Thank you for choosing quality!</div>
+        </div>
+        <div class="inv-signatory-box">
+          <div style="font-size: 10px; color: #64748b; margin-bottom: 2px;">For <span id="docSignatoryShop">UNIQON COMPUTERS</span></div>
+          Authorised Signatory
+        </div>
       </div>
     </div>
 
     <!-- 5. Footer -->
     <div class="footer">
       <span>Thank you for shopping with us! • Choose UNIQON Choose Quality.</span>
-      <span>Powered by UNIQON Billing Pro Enterprise</span>
+      <span>Official Digital Invoice System • Powered by UNIQON Billing Pro Enterprise</span>
     </div>
 
   </div>
@@ -641,61 +757,113 @@
   <script>
     // Utility for currency formatting in INR
     function formatInr(num) {
-      const val = Math.round(Number(num) || 0);
-      return val.toLocaleString('en-IN');
+      const val = Number(num) || 0;
+      return val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    // Number to Words Converter in Indian Currency Format
+    function numberToWordsINR(amount) {
+      const words = [
+        '', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
+        'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen',
+        'Seventeen', 'Eighteen', 'Nineteen'
+      ];
+      const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+      function convertGroup(n) {
+        if (n === 0) return '';
+        if (n < 20) return words[n] + ' ';
+        if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + words[n % 10] : '') + ' ';
+        return words[Math.floor(n / 100)] + ' Hundred ' + (n % 100 !== 0 ? convertGroup(n % 100) : '');
+      }
+
+      const intPart = Math.floor(amount);
+      const paisa = Math.round((amount - intPart) * 100);
+
+      let crore = Math.floor(intPart / 10000000);
+      let lakh = Math.floor((intPart % 10000000) / 100000);
+      let thousand = Math.floor((intPart % 100000) / 1000);
+      let remainder = intPart % 1000;
+
+      let res = '';
+      if (crore > 0) res += convertGroup(crore) + 'Crore ';
+      if (lakh > 0) res += convertGroup(lakh) + 'Lakh ';
+      if (thousand > 0) res += convertGroup(thousand) + 'Thousand ';
+      if (remainder > 0) res += convertGroup(remainder);
+
+      res = res.trim();
+      if (!res) res = 'Zero';
+      res = 'Rupees ' + res;
+      if (paisa > 0) {
+        res += ' and ' + convertGroup(paisa).trim() + ' Paise';
+      }
+      return res + ' Only';
+    }
+
+    // Toast notification helper
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
     }
 
     // Copy coupon code
     function copyCoupon() {
       const code = document.getElementById('couponCode').innerText;
-      navigator.clipboard.writeText(code).then(() => {
-        showToast('Coupon Code "' + code + '" Copied!');
-      });
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(() => {
+          showToast('Coupon code ' + code + ' copied!');
+        });
+      } else {
+        const temp = document.createElement('textarea');
+        temp.value = code;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        document.body.removeChild(temp);
+        showToast('Coupon code ' + code + ' copied!');
+      }
     }
 
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.innerText = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2200);
-    }
-
-    // Default Fallback Demo Data (UNIQON COMPUTERS)
+    // Demo invoice fallback data
     const demoData = {
+      v: 1,
       s: {
         n: 'UNIQON COMPUTERS',
-        c: 'Karaikudi, Tamil Nadu',
+        c: 'Karaikudi',
         p: '8667237053',
-        a: 'No. 2, NKM Complex, Sekkalai Road, Karaikudi',
+        a: 'No. 2, NKM Complex, Sekkalai Road, Karaikudi - 630001',
         g: '33AABCU9603R1ZM',
-        gr: 'https://maps.app.goo.gl/KaraikudiUNIQON'
+        e: 'uniqoncomputers@gmail.com',
+        l: './logo.png'
       },
       b: {
         t: 'Tax Invoice',
-        no: 'INV-2026-0042',
-        d: '01-11-2026',
-        cn: 'Walk-in Customer',
-        pm: 'UPI / GPay',
+        no: 'INV-2026-0099',
+        d: '02-11-2026',
+        cn: 'Karthik Raja',
+        cm: '9876543210',
+        pm: 'CASH',
         ps: 'PAID'
       },
       i: [
-        ['Intel Core i5 12400 Processor 12th Gen', 1, 12500, 12500],
-        ['MSI PRO H610M-E Motherboard DDR4', 1, 6200, 6200],
-        ['Crucial 16GB DDR4 3200MHz Desktop RAM', 1, 2800, 2800],
-        ['WD Green 500GB NVMe M.2 SSD', 1, 3500, 3500],
-        ['Ant Esports 500W Gaming Power Supply', 1, 2200, 2200]
+        ['Intel Core i5 12400 Processor', 1, 12500, 12500],
+        ['MSI PRO H610M-E Motherboard', 1, 6500, 6500],
+        ['Crucial 16GB DDR4 3200MHz RAM', 2, 2800, 5600],
+        ['WD Green 500GB NVMe SSD', 1, 3200, 3200]
       ],
       m: {
-        st: 27200,
-        dt: 1200,
+        st: 27800,
+        dt: 1800,
         cg: 0,
         sg: 0,
         gt: 26000
       },
       ad: {
         t: 'Mega Festive Exchange & Upgrade Offer!',
-        d: 'Get up to ₹10,000 OFF on Laptops & Custom PC Builds. 1-Year Official Warranty.',
-        cc: 'WELCOME500',
+        d: 'Exchange old laptops, get up to ₹10,000 OFF on Custom PC builds.',
+        cc: 'FESTIVE500',
         cd: 'Flat ₹500 OFF on next purchase above ₹5,000'
       }
     };
@@ -708,9 +876,8 @@
         if (!b64 && window.location.hash && window.location.hash.includes('d=')) {
           b64 = window.location.hash.split('d=')[1];
         }
-        if (!b64) {
-          return demoData;
-        }
+        if (!b64) return demoData;
+
         // Standard URL-safe Base64 decode
         const normalized = b64.replace(/-/g, '+').replace(/_/g, '/');
         const jsonStr = decodeURIComponent(escape(atob(normalized)));
@@ -721,6 +888,8 @@
       }
     }
 
+    let _globalBill = demoData.b;
+
     // Render data on page load
     function renderBill() {
       const data = parsePayload();
@@ -730,91 +899,146 @@
       const money = data.m || {};
       const ad = data.ad || {};
 
-      // 1. Shop Details
+      _globalBill = bill;
+
+      // 1. Shop Info & Logo
       const shopName = shop.n || 'UNIQON COMPUTERS';
       document.getElementById('shopName').innerText = shopName;
-      document.getElementById('shopLogoBadge').innerText = shopName.charAt(0);
-      document.getElementById('shopCity').innerText = shop.c || shop.a || 'Karaikudi';
-      document.getElementById('shopPhone').innerText = '📞 ' + (shop.p || '8667237053');
+      document.getElementById('docShopName').innerText = shopName;
+      document.getElementById('docSignatoryShop').innerText = shopName;
 
-      // 2. Promo Banner
-      if (ad.t) {
+      const shopAddress = shop.a || 'No. 2, NKM Complex, Sekkalai Road, Karaikudi - 630001';
+      const shopPhone = shop.p || '8667237053';
+      const shopGst = shop.g ? ' • GSTIN: ' + shop.g : '';
+      document.getElementById('shopAddress').innerText = shopAddress;
+      document.getElementById('shopContact').innerText = '📞 ' + shopPhone + shopGst;
+
+      document.getElementById('docShopDetails').innerHTML = 
+        shopAddress + '<br>Phone: ' + shopPhone + (shop.g ? ' | GSTIN: ' + shop.g : '') + (shop.e ? ' | Email: ' + shop.e : '');
+
+      // Logo assignment
+      const logoUrl = (shop.l && shop.l.trim().length > 0) ? shop.l.trim() : './logo.png';
+      document.getElementById('shopLogoImg').src = logoUrl;
+      document.getElementById('invLogoImg').src = logoUrl;
+
+      // 2. Promotional Card (Max Showroom Style)
+      if (ad.t && ad.t.trim().length > 0) {
         document.getElementById('promoTitle').innerText = ad.t;
-      }
-      if (ad.d) {
-        document.getElementById('promoDesc').innerText = ad.d;
-      }
-      if (ad.cc) {
-        document.getElementById('couponCode').innerText = ad.cc;
-      } else {
-        document.getElementById('couponCode').innerText = 'UNIQON500';
+        document.getElementById('promoDesc').innerText = ad.d || 'Exclusive offer on your next purchase.';
+        document.getElementById('couponCode').innerText = ad.cc || 'WELCOME500';
       }
 
-      // 3. Bill Meta
-      document.getElementById('invoiceType').innerText = bill.t || 'Tax Invoice';
-      document.getElementById('invoiceNumber').innerText = bill.no || 'INV-001';
-      document.getElementById('invoiceDate').innerText = 'Date: ' + (bill.d || new Date().toISOString().substring(0, 10));
-      document.getElementById('customerName').innerText = bill.cn || 'Walk-in Customer';
+      // 3. Document Metadata
+      document.getElementById('docInvoiceType').innerText = bill.t ? bill.t.toUpperCase() : 'TAX INVOICE';
+      document.getElementById('docInvoiceNumber').innerText = bill.no || 'INV-001';
+      document.getElementById('docInvoiceDate').innerText = bill.d || new Date().toISOString().substring(0, 10);
+      document.getElementById('docPaymentMode').innerText = (bill.pm || 'CASH').toUpperCase();
+      document.getElementById('docPaymentStatus').innerText = (bill.ps || 'PAID').toUpperCase();
 
-      // 4. Items Table
-      const itemsBody = document.getElementById('itemsBody');
-      itemsBody.innerHTML = '';
+      // 4. Customer Details
+      const custName = bill.cn || 'Walk-in Customer';
+      document.getElementById('docCustomerName').innerText = custName;
+      document.getElementById('docCustomerPhone').innerText = bill.cm ? 'Phone: ' + bill.cm : 'Walk-in Cash Customer';
+
+      // 5. Items Table
+      const docItemsBody = document.getElementById('docItemsBody');
+      docItemsBody.innerHTML = '';
       items.forEach((item, index) => {
         const name = item[0] || 'Item';
         const qty = item[1] || 1;
-        const price = item[2] || 0;
-        const total = item[3] || (qty * price);
+        const rate = item[2] || 0;
+        const amount = item[3] || (qty * rate);
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td style="color: #94a3b8; font-weight: 700;">${index + 1}</td>
-          <td>
-            <span class="item-name">${name}</span>
-          </td>
-          <td class="right">${qty}</td>
-          <td class="right">₹${formatInr(price)}</td>
-          <td class="right" style="font-weight: 800;">₹${formatInr(total)}</td>
+          <td class="text-center" style="font-weight: 700; color: #64748b;">${index + 1}</td>
+          <td><span class="inv-item-name">${name}</span></td>
+          <td class="text-center">${qty}</td>
+          <td class="text-right">₹${formatInr(rate)}</td>
+          <td class="text-right" style="font-weight: 800;">₹${formatInr(amount)}</td>
         `;
-        itemsBody.appendChild(tr);
+        docItemsBody.appendChild(tr);
       });
 
-      // 5. Money Totals
+      // 6. Totals & Words
       const grandTotal = money.gt || 0;
       const subTotal = money.st || grandTotal;
       const discount = money.dt || 0;
       const tax = (money.cg || 0) + (money.sg || 0) + (money.ig || 0);
 
-      document.getElementById('subTotal').innerText = '₹ ' + formatInr(subTotal);
-      document.getElementById('grandTotal').innerText = '₹ ' + formatInr(grandTotal);
+      document.getElementById('docSubTotal').innerText = '₹ ' + formatInr(subTotal);
+      document.getElementById('docGrandTotal').innerText = '₹ ' + formatInr(grandTotal);
+      document.getElementById('docAmountInWords').innerText = numberToWordsINR(grandTotal);
 
       if (discount > 0) {
-        document.getElementById('discountRow').style.display = 'flex';
-        document.getElementById('discountTotal').innerText = '-₹ ' + formatInr(discount);
+        document.getElementById('docDiscountRow').style.display = 'table-row';
+        document.getElementById('docDiscountTotal').innerText = '-₹ ' + formatInr(discount);
       } else {
-        document.getElementById('discountRow').style.display = 'none';
+        document.getElementById('docDiscountRow').style.display = 'none';
       }
 
       if (tax > 0) {
-        document.getElementById('taxRow').style.display = 'flex';
-        document.getElementById('gstTotal').innerText = '₹ ' + formatInr(tax);
+        document.getElementById('docTaxRow').style.display = 'table-row';
+        document.getElementById('docTaxTotal').innerText = '₹ ' + formatInr(tax);
       } else {
-        document.getElementById('taxRow').style.display = 'none';
+        document.getElementById('docTaxRow').style.display = 'none';
       }
 
-      // 6. Action Buttons
+      // Bank Details
+      if (shop.bn && shop.bn.trim().length > 0) {
+        document.getElementById('docBankDetails').innerHTML = 
+          '<strong>Bank Details:</strong> ' + shop.bn + (shop.ba ? ' | A/C: ' + shop.ba : '') + (shop.bi ? ' | IFSC: ' + shop.bi : '');
+      }
+
+      // 7. Actions Links
       const cleanPhone = (shop.p || '8667237053').replace(/[^0-9]/g, '');
       const waPhone = cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone;
-      
       const waMsg = encodeURIComponent(
-        'Hi ' + shopName + ', I am inquiring about my Invoice (' + (bill.no || '') + ') and the Store Offer (' + (ad.cc || 'WELCOME500') + ')!'
+        'Hi ' + shopName + ', I am inquiring regarding Invoice #' + (bill.no || '') + ' and Store Offer ' + (ad.cc || 'WELCOME500') + '.'
       );
       document.getElementById('btnWhatsApp').href = 'https://wa.me/' + waPhone + '?text=' + waMsg;
-      document.getElementById('btnCall').href = 'tel:' + cleanPhone;
 
-      const reviewUrl = shop.gr && shop.gr.trim().length > 0 
-        ? shop.gr.trim() 
-        : 'https://www.google.com/search?q=' + encodeURIComponent(shopName + ' ' + (shop.c || ''));
+      const reviewUrl = (shop.gr && shop.gr.trim().length > 0)
+        ? shop.gr.trim()
+        : 'https://www.google.com/search?q=' + encodeURIComponent(shopName + ' ' + (shop.c || 'Karaikudi'));
       document.getElementById('btnGoogleReview').href = reviewUrl;
+    }
+
+    // Direct 1-Click PDF Download function (no print spooler!)
+    function downloadInvoicePdf() {
+      const btn = document.getElementById('btnDownloadPdf');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span style="display:inline-block;animation:spin 1s linear infinite;">⏳</span> Downloading PDF...';
+      btn.disabled = true;
+
+      const element = document.getElementById('officialInvoiceSheet');
+      const billNo = (_globalBill && _globalBill.no) ? _globalBill.no : 'Invoice';
+      const filename = 'Invoice_' + billNo + '.pdf';
+
+      const opt = {
+        margin: [6, 6, 6, 6],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, letterRendering: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      if (window.html2pdf) {
+        window.html2pdf().set(opt).from(element).save().then(() => {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          showToast('✅ ' + filename + ' downloaded successfully!');
+        }).catch(err => {
+          console.error('html2pdf error:', err);
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          window.print();
+        });
+      } else {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        window.print();
+      }
     }
 
     window.addEventListener('DOMContentLoaded', renderBill);
